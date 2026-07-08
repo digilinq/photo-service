@@ -7,6 +7,7 @@ on:
       - '**'
 jobs:
   build:
+    name: Build maven project
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -41,7 +42,7 @@ jobs:
           name: Package
       - name: Login to container repository
         if: github.event_name != 'pull_request'
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ env.USERNAME }}
