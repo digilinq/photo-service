@@ -22,7 +22,7 @@ jobs:
         run: mvn --batch-mode --update-snapshots verify -DskipTests
       - run: mkdir staging && cp target/*.jar staging
       - run: cp ./Dockerfile staging
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v7
         with:
           name: Package
           path: staging
