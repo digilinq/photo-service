@@ -1,0 +1,30 @@
+# Default values for photo-service.
+# These are overridden by environment-specific values files.
+
+replicaCount: 1
+
+image:
+  repository: docker.io/lazycomputing/photo-service
+  tag: latest
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  ports:
+    service: 8080
+    management: 8081
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations: {}
+  host: photo.solobit.nl
+  path: /
+  pathType: Prefix
+
+resources: {}
+
+restartPolicy: Always

@@ -1,0 +1,18 @@
+# Test environment values (feature branches).
+replicaCount: 1
+
+image:
+  tag: latest
+
+ingress:
+  enabled: true
+  className: nginx
+  host: photo-tst.solobit.nl
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi

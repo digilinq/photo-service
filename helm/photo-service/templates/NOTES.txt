@@ -1,0 +1,17 @@
+Thank you for installing {{ .Chart.Name }}.
+
+Your release is named {{ .Release.Name }} in namespace {{ .Release.Namespace }}.
+
+{{- if .Values.ingress.enabled }}
+
+The application is exposed via Ingress at:
+  http://{{ .Values.ingress.host }}{{ .Values.ingress.path }}
+{{- else }}
+
+The application is exposed via a {{ .Values.service.type }} service.
+To access it locally, run:
+  kubectl port-forward -n {{ .Release.Namespace }} svc/{{ include "photo-service.fullname" . }} {{ .Values.service.ports.service }}:{{ .Values.service.ports.service }}
+{{- end }}
+
+Check the deployment status with:
+  kubectl get pods -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }}

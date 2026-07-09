@@ -73,22 +73,42 @@ jobs:
     name: Deploy to Kubernetes
     runs-on: ubuntu-latest
     needs: [publish, build]
+    env:
+      DOCKER_IMAGE: ${{ needs.publish.outputs.docker-image }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Determine target environment
+        id: env
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "namespace=solobit" >> "$GITHUB_OUTPUT"
+            echo "values=helm/values-prod.yaml" >> "$GITHUB_OUTPUT"
+            echo "name=production" >> "$GITHUB_OUTPUT"
+          else
+            echo "namespace=solobit-test" >> "$GITHUB_OUTPUT"
+            echo "values=helm/values-test.yaml" >> "$GITHUB_OUTPUT"
+            echo "name=test" >> "$GITHUB_OUTPUT"
+          fi
       - name: Set the Kubernetes context
         uses: azure/k8s-set-context@v5
         with:
           method: service-account
           k8s-url: ${{ secrets.KUBERNETES_URL }}
           k8s-secret: ${{ secrets.KUBERNETES_SECRET }}
-      - name: Deploy to the Kubernetes cluster
-        uses: azure/k8s-deploy@v6
-        with:
-          namespace: amohammadi
-          manifests: |
-            manifests/deployment.yaml
-            manifests/service.yaml
-            manifests/ingress.yaml
-          images: |
-            ${{ needs.publish.outputs.docker-image }}
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+      - name: Deploy with Helm
+        run: |
+          IMAGE="$(echo "$DOCKER_IMAGE" | head -n1)"
+          IMAGE_REPO="${IMAGE%:*}"
+          IMAGE_TAG="${IMAGE##*:}"
+          echo "Deploying $IMAGE_REPO:$IMAGE_TAG to ${{ steps.env.outputs.name }} (${{ steps.env.outputs.namespace }})"
+          helm upgrade --install photo-service helm/photo-service \
+            --namespace "${{ steps.env.outputs.namespace }}" \
+            --create-namespace \
+            --values "${{ steps.env.outputs.values }}" \
+            --set image.repository="$IMAGE_REPO" \
+            --set image.tag="$IMAGE_TAG" \
+            --wait \
+            --atomic

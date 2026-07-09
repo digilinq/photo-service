@@ -1,0 +1,18 @@
+# Production environment values (main branch).
+replicaCount: 2
+
+image:
+  tag: latest
+
+ingress:
+  enabled: true
+  className: nginx
+  host: photo.solobit.nl
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 512Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
