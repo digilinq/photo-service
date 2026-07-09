@@ -92,7 +92,7 @@ jobs:
         with:
           namespace: amohammadi
           manifests: |
-            manifests/deployment.yml
+            manifests/deployment.yaml
             manifests/service.yaml
             manifests/ingress.yaml
           images: |
