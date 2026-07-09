@@ -79,7 +79,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Debug secret
         run: |
-          echo '${{ secrets.KUBERNETES_SECRET }}' > secret.yaml
+          echo '${{ vars.K8S_SECRET }}' > secret.yaml
           cat secret.yaml
       - name: Set the Kubernetes context
         uses: azure/k8s-set-context@v5
