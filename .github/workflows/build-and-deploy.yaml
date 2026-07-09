@@ -29,8 +29,8 @@ jobs:
           path: staging
   publish:
     env:
-      REGISTRY: ${{ vars.CONTAINER_REGISTRY }}
-      USERNAME: ${{ vars.DOCKER_HUB_USERNAME }}
+      CONTAINER_REGISTRY: ${{ vars.CONTAINER_REGISTRY }}
+      DOCKER_HUB_USERNAME: ${{ vars.DOCKER_HUB_USERNAME }}
       PACKAGE: ${{ vars.PACKAGE_NAME }}
     name: Create docker image and push to Docker Hub
     needs: build
@@ -44,7 +44,7 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v4
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ env.USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          registry: ${{ env.CONTAINER_REGISTRY }}
+          username: ${{ env.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
