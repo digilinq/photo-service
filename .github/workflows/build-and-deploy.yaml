@@ -35,6 +35,8 @@ jobs:
     name: Create docker image and push to Docker Hub
     needs: build
     runs-on: ubuntu-latest
+    outputs:
+      docker-image: ${{ steps.meta.outputs.tags }}
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v8
@@ -81,3 +83,13 @@ jobs:
           method: service-account
           k8s-url: ${{ secrets.KUBERNETES_URL }}
           k8s-secret: ${{ secrets.KUBERNETES_SECRET }}
+      - name: Deploy to the Kubernetes cluster
+        uses: azure/k8s-deploy@v6
+        with:
+          namespace: amohammadi
+          manifests: |
+            manifests/deployment.yml
+            manifests/service.yaml
+            manifests/ingress.yaml
+          images: |
+            ${{ needs.publish.outputs.docker-image }}
