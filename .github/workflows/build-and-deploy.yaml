@@ -86,7 +86,7 @@ jobs:
         with:
           method: service-account
           k8s-url: ${{ secrets.KUBERNETES_URL }}
-          k8s-secret: ${{ secrets.KUBERNETES_SECRET }}
+          k8s-secret: ${{ var.K8S_SECRET }}
       - name: Deploy to the Kubernetes cluster
         uses: azure/k8s-deploy@v6
         with:
