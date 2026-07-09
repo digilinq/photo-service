@@ -12,7 +12,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - run: ls -la
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
@@ -77,16 +76,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Debug secret
-        run: |
-          echo '${{ vars.K8S_SECRET }}' > secret.yaml
-          cat secret.yaml
       - name: Set the Kubernetes context
         uses: azure/k8s-set-context@v5
         with:
           method: service-account
           k8s-url: ${{ secrets.KUBERNETES_URL }}
-          k8s-secret: ${{ vars.K8S_SECRET }}
+          k8s-secret: ${{ secrets.KUBERNETES_SECRET }}
       - name: Deploy to the Kubernetes cluster
         uses: azure/k8s-deploy@v6
         with:
