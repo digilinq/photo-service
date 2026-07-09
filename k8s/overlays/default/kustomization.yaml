@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# The namespace and replica count below are the defaults.
+# They can be overridden at deploy time via:
+#   kustomize edit set namespace <namespace>
+#   kustomize edit set replicas photo-service=<count>
+namespace: amohammadi
+
+resources:
+  - ../../base
+
+replicas:
+  - name: photo-service
+    count: 2
